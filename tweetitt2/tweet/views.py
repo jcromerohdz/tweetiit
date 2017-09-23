@@ -15,10 +15,17 @@ def home_tweet(request):
 #CRUD Create Retrive or Read Update Delete
 
 # Retrive GET desde la base de datos
-def tweet_detail_view(request):
-    msg = "vista de detalle"
-    return render(request, "tweets/detail_view.html", {'msg':msg})
+def tweet_detail_view(request, id=1):
+    # msg = "vista de detalle"
+    result_set = Tweet.objects.get(id=id)
+    context = {
+        "result": result_set
+    }
+    return render(request, "tweets/detail_view.html", context)
 
 def tweet_list_view(request):
-    msg = "lista de tweets"
-    return render(request, "tweets/list_view.html", {'msg':msg})
+    result_set = Tweet.objects.all()
+    context = {
+        "result": result_set
+    }
+    return render(request, "tweets/list_view.html", context)
