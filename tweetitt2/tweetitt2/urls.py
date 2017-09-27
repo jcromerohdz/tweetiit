@@ -19,7 +19,7 @@ from django.conf import settings
 from django.conf.urls.static import static
 
 from .views import home
-from tweet.views import home_tweet, tweet_detail_view, tweet_list_view
+from tweet.views import home_tweet, tweet_detail_view, tweet_list_view, TweetListView,  TweetDetailView
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
@@ -27,5 +27,8 @@ urlpatterns = [
     url(r'^tweet/$', home_tweet, name='home_tweet'),
     url(r'^tweet/detail$', tweet_detail_view, name='tweet_detail'),
     url(r'^tweet/list$', tweet_list_view, name='tweet_list'),
+    url(r'^tweet/detailc/(?P<id>\d)/$', TweetDetailView.as_view(), name='tweetdetail'),
+    url(r'^tweet/listc$', TweetListView.as_view(), name='tweetlist'),
+
 
 ]+ static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

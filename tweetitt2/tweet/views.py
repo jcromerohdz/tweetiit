@@ -2,6 +2,7 @@
 from __future__ import unicode_literals
 
 from django.shortcuts import render
+from django.views.generic import DetailView, ListView
 from .models import Tweet
 
 # Create your views here.
@@ -13,6 +14,33 @@ def home_tweet(request):
     return render(request, "home.html", {'v':v, 'v2':v2})
 
 #CRUD Create Retrive or Read Update Delete
+
+#With built in django generic Class-based
+class TweetDetailView(DetailView):
+    template_name = "tweets/tweet_detail.html"
+    queryset = Tweet.objects.all()
+
+    def get_object(self):
+        id = self.kwargs.get("id")
+        print id
+        return Tweet.objects.get(id=id)
+
+    def get_context_data(self, *args, **kwargs):
+        context = super(TweetDetailView, self).get_context_data(*args, **kwargs)
+        print context
+        return context
+
+
+class TweetListView(ListView):
+    template_name = "tweets/tweet_list.html"
+    queryset = Tweet.objects.all()
+
+    # def get_context_data(self, *args, **kwargs):
+    #     context = super(TweetListView, self).get_context_data(*args, **kwargs)
+    #     print context
+    #     return context
+
+
 
 # Retrive GET desde la base de datos
 def tweet_detail_view(request, id=1):
