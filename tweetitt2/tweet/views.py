@@ -2,8 +2,10 @@
 from __future__ import unicode_literals
 
 from django.shortcuts import render
-from django.views.generic import DetailView, ListView
+from django.views.generic import DetailView, ListView, CreateView
+from .forms import TweetModelForm
 from .models import Tweet
+
 
 # Create your views here.
 
@@ -14,6 +16,19 @@ def home_tweet(request):
     return render(request, "home.html", {'v':v, 'v2':v2})
 
 #CRUD Create Retrive or Read Update Delete
+
+class TweetCreateView(CreateView):
+    form_class = TweetModelForm
+    template_name = "tweets/form.html"
+    success_url = "/tweet/listc"
+
+    # def form_valid(self, form):
+    #     form.instance.user = self.request.user
+    #     print form.instance.user
+    #     return super(TweetCreateView, self).form_valid(form)
+
+
+
 
 #With built in django generic Class-based
 class TweetDetailView(DetailView):
