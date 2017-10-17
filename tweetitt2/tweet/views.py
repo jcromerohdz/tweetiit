@@ -1,10 +1,19 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.shortcuts import render
-from django.views.generic import DetailView, ListView, CreateView
+from django.urls import reverse_lazy
+from django.views.generic import (CreateView,
+                                  UpdateView,
+                                  DeleteView,
+                                  ListView,
+                                  DetailView)
+
+
 from .forms import TweetModelForm
 from .models import Tweet
+from .mixin import FormUserNeededMixin
 
 
 # Create your views here.
@@ -17,17 +26,29 @@ def home_tweet(request):
 
 #CRUD Create Retrive or Read Update Delete
 
-class TweetCreateView(CreateView):
+class TweetCreateView(LoginRequiredMixin, FormUserNeededMixin, CreateView):
     form_class = TweetModelForm
-    template_name = "tweets/form.html"
+    template_name = "tweets/create_view.html"
     success_url = "/tweet/listc"
+    login_url = "/admin"
+
 
     # def form_valid(self, form):
     #     form.instance.user = self.request.user
     #     print form.instance.user
     #     return super(TweetCreateView, self).form_valid(form)
 
+class TweetUpdateView(UpdateView):
+    queryset = Tweet.objects.all()
+    form_class = TweetModelForm
+    template_name = "tweets/update_view.html"
+    success_url = "/tweet/listc"
 
+
+class TweetDeleteView(LoginRequiredMixin, DeleteView):
+    model = Tweet
+    template_name = "tweets/delete_confirm.html"
+    success_url = reverse_lazy("tweet_list")
 
 
 #With built in django generic Class-based
