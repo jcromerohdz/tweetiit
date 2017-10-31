@@ -1,18 +1,19 @@
-<!DOCTYPE html>
-<html>
-  <head>
-    <meta charset="utf-8">
-    <title>create tweet</title>
-  </head>
-  <body>
 
-    <form class="form" action="" method="POST">
+<form class="form"  method="POST" action="{% if action_url %}{{ action_url }}{% endif %}" >
+
       {% csrf_token %}
-      {{form.as_p}}
+      <!-- <label for="id_content">Content:</label></br> -->
 
-      <input type="submit" name="" value="{{btn_title}}">
+      <div class="control">
+        <!-- Que es un widget y como lo uso? Tarea -->
+          <!-- <textarea class="textarea"  name="content" required="" id="id_content" maxlength="140" placeholder="Tweet Please"></textarea> -->
+          {{form.as_p}}
+          <input class="button is-primary is-block is-alt is-large" type="submit" name="" value="{{btn_title}}">
+      </div>
 
-    </form>
 
-  </body>
-</html>
+      <!-- {{form.as_p}} -->
+
+
+
+</form>

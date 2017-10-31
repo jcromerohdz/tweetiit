@@ -3,6 +3,7 @@ from __future__ import unicode_literals
 
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.shortcuts import render
+from django.db.models import Q
 from django.urls import reverse_lazy
 from django.views.generic import (CreateView,
                                   UpdateView,
@@ -69,12 +70,25 @@ class TweetDetailView(DetailView):
 
 class TweetListView(ListView):
     template_name = "tweets/tweet_list.html"
-    queryset = Tweet.objects.all()
+    #queryset = Tweet.objects.all()
 
-    # def get_context_data(self, *args, **kwargs):
-    #     context = super(TweetListView, self).get_context_data(*args, **kwargs)
-    #     print context
-    #     return context
+    def get_queryset(self, *args, **kwargs):
+        qs = Tweet.objects.all()
+        print self.request.GET
+        query = self.request.GET.get("q", None)
+        if query is not None:
+            qs = qs.filter(
+                            Q(content__icontains=query) |
+                            Q(user__username__icontains=query)
+                          )
+        return qs
+
+    def get_context_data(self, *args, **kwargs):
+        context = super(TweetListView, self).get_context_data(*args, **kwargs)
+        print context
+        context['create_form'] = TweetModelForm()
+        context['create_url'] = reverse_lazy("tweet_create")
+        return context
 
 
 

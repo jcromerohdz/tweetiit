@@ -31,7 +31,7 @@ urlpatterns = [
     url(r'^tweet/detail/(?P<pk>\d)/edit/$', TweetUpdateView.as_view(), name='tweet_edit'),
     url(r'^tweet/detail/(?P<pk>\d)/delete/$', TweetDeleteView.as_view(), name='tweet_delete'),
     url(r'^tweet/detail/(?P<id>\d)/$', TweetDetailView.as_view(), name='tweet_detail'),
-    url(r'^tweet/listc$', TweetListView.as_view(), name='tweet_list'),
+    url(r'^tweet/listc/$', TweetListView.as_view(), name='tweet_list'),
 
 
 ]+ static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
