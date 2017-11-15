@@ -69,7 +69,7 @@ class TweetDetailView(DetailView):
 
 
 class TweetListView(ListView):
-    template_name = "tweets/tweet_list.html"
+    template_name = "tweets/tweet_list_ajax.html"
     #queryset = Tweet.objects.all()
 
     def get_queryset(self, *args, **kwargs):
