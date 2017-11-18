@@ -33,6 +33,7 @@ urlpatterns = [
     url(r'^tweet/detail/(?P<id>\d)/$', TweetDetailView.as_view(), name='tweet_detail'),
     url(r'^tweet/listc/$', TweetListView.as_view(), name='tweet_list'),
     url(r'^api/tweet/', include('tweet.api.urls', namespace='tweet-api' )),
+    
 
 
 

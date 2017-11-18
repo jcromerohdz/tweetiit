@@ -17,45 +17,130 @@ function getParameterByName(name, url) {
     // console.log("working");
     var query = getParameterByName('q');
     console.log(query);
-    $.ajax({
-      url: "/api/tweet/?q=somequery",
-      data:{
-        'q': query
-      },
-      method: "GET",
-      success: function(data){
-        // console.log(data);
-        $.each(data, function(key, value){
-          console.log("hola");
-          console.log(key);
-          console.log(value.username);
-          var tweetKey = key;
-          var tweetContent = value.content;
-          var tweetUser = value.user.username;
-          $("#ajax_tweets").append(
-              "<h4>"+ tweetContent + "</h4>" +
 
-              "<span class='pull-right has-text-grey-light'><i class='fa fa-comments'></i> 1</span>"+
-              "<div class='media'>"+
-                "<div class='content'>"+
-                  "<p>"+
-                    "<a href='/tweet/detail/'"+tweetContent+"'/'>View</a>"+ tweetUser+ "&nbsp;"+
-                  "</p>"+
-                "</div>"+
-              "</div>"
-          )
+    function attachTweet(tweetValue, prepend){
+      var tweetDateDisplay = tweetValue.timesince;
+      var tweetContent = tweetValue.content;
+      var tweetUser = tweetValue.user.username;
 
+      if (prepend==true){
+        $("#ajax_tweets").prepend(
 
-        });
-      },
-      error: function(data){
-        console.log("error");
-        console.log(data);
+            "<h4>"+ tweetContent + "</h4>" +
+
+            "<span class='pull-right has-text-grey-light'><i class='fa fa-comments'></i> 1</span>"+
+            "<div class='media'>"+
+              "<div class='content'>"+
+                "<p>"+
+                  "<a href='/tweet/detail/'"+tweetContent+"'/'>View</a> "+" | "+tweetUser+ "&nbsp;"+ "|" +
+                  tweetDateDisplay+
+                "</p>"+
+              "</div>"+
+            "</div>"
+
+        )
+
+      }else{
+        $("#ajax_tweets").append(
+
+            "<h4>"+ tweetContent + "</h4>" +
+
+            "<span class='pull-right has-text-grey-light'><i class='fa fa-comments'></i> 1</span>"+
+            "<div class='media'>"+
+              "<div class='content'>"+
+                "<p>"+
+                  "<a href='/tweet/detail/'"+tweetContent+"'/'>View</a> "+" | "+tweetUser+ "&nbsp;"+ "|" +
+                  tweetDateDisplay+
+                "</p>"+
+              "</div>"+
+            "</div>"
+
+        )
 
       }
 
-    });
 
+    }
+
+    function fetchTweets(){
+      console.log("fetching...");
+      $.ajax({
+        url: "/api/tweet/?q=somequery",
+        data:{
+          'q': query
+        },
+        method: "GET",
+        success: function(data){
+          // console.log(data);
+          $.each(data, function(key, value){
+            var tweetKey = key;
+            attachTweet(value);
+            // console.log("hola");
+            // console.log(key);
+            // console.log(value.username);
+            // var tweetKey = key;
+            // var tweetDateDisplay = value.timesince;
+            // var tweetContent = value.content;
+            // var tweetUser = value.user.username;
+            // $("#ajax_tweets").append(
+            //
+            //     "<h4>"+ tweetContent + "</h4>" +
+            //
+            //     "<span class='pull-right has-text-grey-light'><i class='fa fa-comments'></i> 1</span>"+
+            //     "<div class='media'>"+
+            //       "<div class='content'>"+
+            //         "<p>"+
+            //           "<a href='/tweet/detail/'"+tweetContent+"'/'>View</a> "+" | "+tweetUser+ "&nbsp;"+ "|" +
+            //           tweetDateDisplay+
+            //         "</p>"+
+            //       "</div>"+
+            //     "</div>"
+            //
+            // )
+
+
+
+          });
+        },
+        error: function(data){
+          console.log("error");
+          console.log(data);
+
+        }
+      });
+    }
+
+    fetchTweets();
+
+    $("#tweet-form").submit(function(event){
+      event.preventDefault();
+      var this_ = $(this);
+      console.log(event);
+      console.log(this_.serialize());
+      var formData = this_.serialize();
+
+      $.ajax({
+        url: "/api/tweet/create/",
+        data:formData,
+        method: "POST",
+        success: function(data){
+          // console.log(data);
+          // fetchTweets();
+          this_.find("#id_content").val("");
+          attachTweet(data, true);
+        },
+        error: function(data){
+          console.log("error");
+          console.log(data);
+          console.log(data.statusText);
+          console.log(data.status);
+
+        }
+      });
+
+
+
+    })
 
 
   });
@@ -74,14 +159,18 @@ function getParameterByName(name, url) {
 {%block content%}
 {% if not request.GET.q %}
 <div class="">
-  {%include "tweets/form.html" with form=create_form action_url=create_url btn_title='Tweet'%}
+  {%include "tweets/form.html" with form=create_form action_url=create_url btn_title='Tweet' form_id='tweet-form'%}
   <!-- <p class="image is-32x32">
     <img src="http://bulma.io/images/placeholders/128x128.png">
   </p> -->
 </div>
+
+
 {% endif %}
+<article class="post" id="ajax_tweets">
+</article>
   {% for object in object_list %}
-  <article class="post" id="ajax_tweets">
+  <!-- <article class="post" id="ajax_tweets"> -->
 
   <!-- <h4>{{object}}</h4> -->
   <!-- <span class="pull-right has-text-grey-light"><i class="fa fa-comments"></i> 1</span> -->
@@ -108,7 +197,7 @@ function getParameterByName(name, url) {
 
   <!-- </div> -->
 
-</article>
+<!-- </article> -->
 {%empty%}
   {% if request.GET.q %}
     <p>No tweets found.</p>

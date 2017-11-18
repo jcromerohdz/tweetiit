@@ -1,14 +1,25 @@
-from rest_framework import generics
-
 from django.db.models import Q
+from rest_framework import generics
+from rest_framework import permissions
+
 from tweet.models import Tweet
 from .serializers import TweetModelSerializer
+
+
+
+
+class TweetCreateAPIView(generics.CreateAPIView):
+    serializer_class = TweetModelSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
+    def perform_create(self, serializer):
+        serializer.save(user=self.request.user)
 
 class TweetListAPIView(generics.ListAPIView):
     serializer_class = TweetModelSerializer
 
     def get_queryset(self, *args, **kwargs):
-        qs = Tweet.objects.all()
+        qs = Tweet.objects.all().order_by("-created")
         query = self.request.GET.get("q", None)
         if query is not None:
             qs = qs.filter(
