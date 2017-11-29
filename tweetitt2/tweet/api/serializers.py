@@ -12,6 +12,7 @@ class TweetModelSerializer(serializers.ModelSerializer):
         model = Tweet
         fields = [
             'user',
+            'id',
             'content',
             'created',
             'date_display',

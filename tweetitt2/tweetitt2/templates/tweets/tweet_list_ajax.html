@@ -23,6 +23,9 @@ function getParameterByName(name, url) {
       var tweetDateDisplay = tweetValue.timesince;
       var tweetContent = tweetValue.content;
       var tweetUser = tweetValue.user.username;
+      var tweetId = tweetValue.id;
+
+
 
       if (prepend==true){
         $("#ajax_tweets").prepend(
@@ -33,8 +36,8 @@ function getParameterByName(name, url) {
             "<div class='media'>"+
               "<div class='content'>"+
                 "<p>"+
-                  "<a href='/tweet/detail/'"+tweetContent+"'/'>View</a> "+" | "+tweetUser+ "&nbsp;"+ "|" +
-                  tweetDateDisplay+
+                  "<a href='/tweet/detail/'"+tweetId+"'/'>View</a> "+" | "+tweetUser+ "&nbsp;"+ "|" +
+                  tweetDateDisplay+ " | "+
                 "</p>"+
               "</div>"+
             "</div>"
@@ -50,8 +53,9 @@ function getParameterByName(name, url) {
             "<div class='media'>"+
               "<div class='content'>"+
                 "<p>"+
-                  "<a href='/tweet/detail/'"+tweetContent+"'/'>View</a> "+" | "+tweetUser+ "&nbsp;"+ "|" +
-                  tweetDateDisplay+
+                  "<a href='/tweet/detail/"+tweetId+"'/'>View</a> "+" | "+tweetUser+ "&nbsp;"+ "|" +
+                  tweetDateDisplay+ " | " +"<a href='/tweet/detail/"+tweetId+"/edit'>Edit</a> "+
+                    " | " +"<a href='/tweet/detail/"+tweetId+"/delete'>Borrar</a> "+
                 "</p>"+
               "</div>"+
             "</div>"
